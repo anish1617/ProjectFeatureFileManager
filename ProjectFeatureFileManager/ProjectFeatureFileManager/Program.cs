@@ -1,16 +1,28 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using ProjectFeatureFileManager.Models;
+using ProjectFeatureFileManager.Data;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+builder.Services.AddDbContext<SchoolContext>(options =>
+   options.UseNpgsql(builder.Configuration.GetConnectionString("SchoolContext")));
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+var app = builder.Build();
+using (var scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<SchoolContext>();
+        var created = context.Database.EnsureCreated();
+
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred creating the DB.");
+    }
 }
 
 app.UseHttpsRedirection();
