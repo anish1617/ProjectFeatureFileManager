@@ -28,6 +28,10 @@ jobs:
           context: .
           target: build
           load: true
+      - 
+        name: Convert repo name to lowercase
+        id: repo
+        run: echo "::set-output name=repo::$(echo ${GITHUB_REPOSITORY##*/} | awk '{print tolower($0)}')"
       -
         name: Build and push
         uses: docker/build-push-action@v5
@@ -36,4 +40,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           target: final
-          tags: ${{ secrets.DOCKER_USERNAME }}/projectfeaturefilemanager:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ steps.repo.outputs.repo }}:latest
