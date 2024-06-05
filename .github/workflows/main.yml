@@ -36,4 +36,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           target: final
-          tags: ${{ secrets.DOCKER_USERNAME }}/$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]'):latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/projectfeaturefilemanager:latest
