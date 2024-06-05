@@ -8,6 +8,7 @@ ARG TARGETARCH
 
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
     dotnet publish -a ${TARGETARCH/amd64/x64} --use-current-runtime --self-contained false -o /app
+RUN dotnet test /source/ProjectFeatureFileManager/ProjectFeatureFileManagerTests
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS development
 COPY . /source
